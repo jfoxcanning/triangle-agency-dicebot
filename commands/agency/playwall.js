@@ -17,7 +17,18 @@ module.exports = {
         var pd = interaction.options.getString(`code`).toUpperCase();
 
         switch(pd) {
-            case `U1`: // the Six-Sided Die
+            // unstable codes
+            case `U1`: //old 6-Sided
+            case `N2`: // old 10-sided
+            case `X2`: // old d100
+                await interaction.reply({
+                    content: `This playwall code is only valid in the Unstable Edition of the game. Please check updated materials and try your roll again.`,
+                    ephemeral: true
+                });
+
+                break;
+            // final codes
+            case `U2`: // the Six-Sided Die
                 var d6Modal = new ModalBuilder()
                     .setCustomId(`d6Modal`)
                     .setTitle(`The Six-Sided Die`);
@@ -450,7 +461,7 @@ module.exports = {
                         }
                     })
                 break;
-            case `N2`: // the Ten-Sided Die
+            case `N1`: // the Ten-Sided Die
                 var d10Modal = new ModalBuilder()
                     .setCustomId(`d10Modal`)
                     .setTitle(`The Ten-Sided Die`);
@@ -616,7 +627,7 @@ module.exports = {
                     .catch(err => {});
 
                 break;
-            case `X2`: // Background Talent d100
+            case `X3`: // Background Talent d100
                 // roll the die!
                 var extras = rando(1,100);
 
@@ -630,7 +641,7 @@ module.exports = {
 
                 break;
             default:
-                await interaction.reply(`Invalid Playwall. Please verify your request and report any complaints to Vault staff.`);
+                await interaction.reply(`Invalid Playwall. Please verify your request and report any complaints to Vault staff in-person.`);
                 break;
         }
     }
