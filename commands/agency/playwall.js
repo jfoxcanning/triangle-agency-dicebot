@@ -500,10 +500,10 @@ module.exports = {
                         //d10roll = 3;
                         //d6roll = 3;
 
-                        var resultsOutput = `Results: < **${d10roll}** )`;
+                        var resultsOutput = `Results: < **${d10roll}** >`;
 
                         if (includeD6)
-                            resultsOutput = resultsOutput.concat(`, [ **${d6roll}** ]`);
+                            resultsOutput = resultsOutput.concat(`, [**${d6roll}**]`);
 
                         var successTotal = d10roll;
                         var failureTotal = d10roll;
