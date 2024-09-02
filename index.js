@@ -9,7 +9,7 @@ const client = new Client({
     intents: [GatewayIntentBits.Guilds],
     activities: [
         {
-            name: `over our reality`,
+            name: `over our Reality`,
             type: ActivityType.Watching
         }
     ]
@@ -61,6 +61,10 @@ client.on(Events.InteractionCreate, async interaction => {
             await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true});
         }
     }
+});
+
+client.on('error', error => {
+    console.error(`The WebSocket encountered an error:`, error);
 });
 
 // Log in
