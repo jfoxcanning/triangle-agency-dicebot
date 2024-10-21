@@ -45,7 +45,7 @@ const rest = new REST().setToken(token);
 		console.log(`Purged old commands.`);
 		
 
-		// The put method is used to fully refresh all commands  with the current set
+		// The put method is used to fully refresh all commands with the current set
 		
 		const data = await rest.put(
 			Routes.applicationCommands(clientId),
