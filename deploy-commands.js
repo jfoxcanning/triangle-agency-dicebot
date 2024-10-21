@@ -34,30 +34,30 @@ const rest = new REST().setToken(token);
 
 		// purge old data
 		
-		// const purge = await rest.put(
-		// 	Routes.applicationCommands(clientId),
-		// 	{ body: null },
-		// );
-		// const purgeGuilds = await rest.put(
-		// 	Routes.applicationGuildCommands(clientId, guildId),
-		// 	{ body: null },
-		// );
-		// console.log(`Purged old commands.`);
+		const purge = await rest.put(
+			Routes.applicationCommands(clientId),
+			{ body: null },
+		);
+		const purgeGuilds = await rest.put(
+			Routes.applicationGuildCommands(clientId, guildId),
+			{ body: null },
+		);
+		console.log(`Purged old commands.`);
 		
 
 		// The put method is used to fully refresh all commands with the current set
 		
-		const data = await rest.put(
-			Routes.applicationCommands(clientId),
-			{ body: commands },
-		);
+		// const data = await rest.put(
+		// 	Routes.applicationCommands(clientId),
+		// 	{ body: commands },
+		// );
 		
 
-		// guild command stuff
-		const guildData = await rest.put(
-			Routes.applicationGuildCommands(clientId, guildId),
-			{ body: commands },
-		);
+		// // guild command stuff
+		// const guildData = await rest.put(
+		// 	Routes.applicationGuildCommands(clientId, guildId),
+		// 	{ body: commands },
+		// );
 
 		console.log(`Successfully reloaded ${data.length} application (/) commands.`);
 	} catch (error) {
