@@ -85,7 +85,7 @@ module.exports = {
         var commentaryOutput = ``;
 
         //assemble commentary
-        commentaryOutput = `You achieved **${threesTotal} Successes** in **${rollsNeeded} rgit addolls**.`;
+        commentaryOutput = `You achieved **${threesTotal} Successes** in **${rollsNeeded} rolls**.`;
         commentaryOutput = commentaryOutput.concat(`\n-# Your goal becomes reality if you got six 3s faster than everyone else, or if you got more threes than everyone else in the same number of rolls.`);
 
         //send reply
