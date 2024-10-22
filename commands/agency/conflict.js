@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('roll')
+        .setName('conflict')
         .setDescription('Engage in Conflict Resolution.')
         .addStringOption(option => 
             option.setName(`reason`)
