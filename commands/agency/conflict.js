@@ -23,7 +23,7 @@ module.exports = {
         // ---------- REASONING
         if (reasoning) {
             var reasonTag = `\`\`\``;
-            reasonOutput = `Engaging in Conflict Resolution. Your Goal:${reasonTag}${reasoning}${reasonTag}`;
+            reasonOutput = `**Engaging in Conflict Resolution.** Your Goal:${reasonTag}${reasoning}${reasonTag}`;
         }
 
         // ---------- RESULTS
