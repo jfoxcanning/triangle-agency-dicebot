@@ -35,17 +35,17 @@ module.exports = {
 
         // ---------- RESULTS
         // roll those <dice / bones>
-        var results = new Array();
+        var results = [];
         for (dice = 0; dice < 6; dice++) {
            results.push(rando(1,4));
         }
 
         // TEST DATA
-        //results = new Array(3,3,3,1,1,1);
+        //results = [3,3,3,3,2,3];
         
         //sort initial results
-        var threes = new Array();
-        var chaos = new Array();
+        var threes = [];
+        var chaos = [];
         results.forEach((v,i,a) => {
             if (v == 3) {
                 threes.push(v);
@@ -54,7 +54,8 @@ module.exports = {
             }
         });
 
-        var isStable = (threes.length > 0 && threes.length % 3 == 0);
+        // check for Triscendence
+        var startStable = (threes.length > 0 && threes.length % 3 == 0);
         var isTriscendent = (threes.length == 3);
 
         if (!isTriscendent) { //if triscendent, do not adjust rolls
@@ -62,17 +63,29 @@ module.exports = {
             var extraChaos = 0;
             for (b = burnout; b > 0; b--) {
                 if(threes.length > 0) {
-                    chaos.push(`~~${threes.pop()}~~`);
+                    chaos.push(`${threes.pop()}`);
                 } else {
                     extraChaos++;
                 }
             }
         }
+        
+        // check for stability after adjustment
+        var isStable = (threes.length > 0 && threes.length % 3 == 0);
 
         // ----------- RESULTS ASSEMBLY
         var compiledResults = ``;
         var threesTag = `**`;
-        var chaosTag = isStable ? `~~` : ``;
+        var stableTag = isStable ? `~~` : ``; //if stable, prepare to strikethrough all non-successes
+
+        // if NOT stable but burnout was applied, strikeout any 3s in the chaos array
+        if (!isStable && hadBurnout) {
+            chaos.forEach((v,i,a) => {
+                if (v==3) {
+                    chaos[i] = `~~${v}~~`;
+                }
+            });
+        }
 
         // add tagged threes to the results
         if (threes.length > 0) { // if there are any threes...
@@ -83,7 +96,7 @@ module.exports = {
         }
         if (chaos.length > 0) { // if there's chaos...
             // ...add it to the results string
-            compiledResults = compiledResults.concat(`${chaosTag}${chaos.join(`, `)}${chaosTag}`);
+            compiledResults = compiledResults.concat(`${stableTag}${chaos.join(`, `)}${stableTag}`);
         }
 
         //finalize results
@@ -119,11 +132,7 @@ module.exports = {
         // burnout check
         var burnoutText = ``;
         if (hadBurnout) {
-            var burnoutVerb = `applied`;
-            //stability check
-            if (isStable) {
-                burnoutVerb = `cancelled`;
-            }
+            var burnoutVerb = startStable ? `cancelled` : `applied`;
 
             burnoutText = ` Burnout ${burnoutVerb}.`;
         }

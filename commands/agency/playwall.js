@@ -27,6 +27,7 @@ module.exports = {
                 });
 
                 break;
+            
             // final codes
             case `U2`: // the Six-Sided Die
                 var d6Modal = new ModalBuilder()
@@ -71,19 +72,19 @@ module.exports = {
 
                         // ---------- RESULTS
                         // roll those <dice / bones>
-                        var results = new Array();
+                        var results = [];
                         for (dice = 0; dice < 6; dice++) {
                             results.push(rando(1,4));
                         }
                         var d6roll = rando(1,6);
 
                         // TEST DATA
-                        //results = new Array(1,2,3,1,2,3);
+                        //results = [1,2,3,1,2,3];
                         //d6roll = 3;
                         
                         //sort initial results
-                        var threes = new Array();
-                        var chaos = new Array();
+                        var threes =[];
+                        var chaos = [];
                         results.forEach((v,i,a) => {
                             if (v == 3) {
                                 threes.push(v);
@@ -107,13 +108,14 @@ module.exports = {
                                 break;
                         }
 
+                        var startStable = (threesTotal > 0 && threesTotal % 3 == 0);
                         var isTriscendent = (threesTotal == 3);
                         
                         if (!isTriscendent) { //if triscendent, do not adjust rolls
                             //otherwise start applying burnout adjustments
                             for (b = initialBurnout; b > 0; b--) {
                                 if(threes.length > 0) {
-                                    chaos.push(`~~${threes.pop()}~~`);
+                                    chaos.push(`${threes.pop()}`);
                                 }
                                 if (threesTotal > 0)
                                     threesTotal--;
@@ -127,7 +129,16 @@ module.exports = {
                         // ----------- RESULTS ASSEMBLY
                         var compiledResults = ``;
                         var threesTag = `**`;
-                        var chaosTag = isStable ? `~~` : ``;
+                        var stableTag = isStable ? `~~` : ``; //if stable, prepare to strikethrough all non-successes
+
+                        // if NOT stable but burnout was applied, strikeout any 3s in the chaos array
+                        if (!isStable && hadBurnout) {
+                            chaos.forEach((v,i,a) => {
+                                if (v==3) {
+                                    chaos[i] = `~~${v}~~`;
+                                }
+                            });
+                        }
                 
                         // add tagged threes to the results
                         if (threes.length > 0) { // if there are any threes...
@@ -138,7 +149,7 @@ module.exports = {
                         }
                         if (chaos.length > 0) { // if there's chaos...
                             // ...add it to the results string
-                            compiledResults = compiledResults.concat(`${chaosTag}${chaos.join(`, `)}${chaosTag}`);
+                            compiledResults = compiledResults.concat(`${stableTag}${chaos.join(`, `)}${stableTag}`);
                         }
                         // add the d6
                         compiledResults = compiledResults.concat(`, [**${d6roll}**]`);
@@ -247,19 +258,19 @@ module.exports = {
 
                         // ---------- RESULTS
                         // roll those <dice / bones>
-                        var results = new Array();
+                        var results = [];
                         for (dice = 0; dice < 6; dice++) {
                             results.push(rando(1,4));
                         }
                         var d8roll = rando(1,8);
 
                         // TEST DATA
-                        //results = new Array(3,3,3,1,1,1);
-                        //d8roll = 3;
+                        results = [3,1,1,1,1,1];
+                        d8roll = 6;
                         
                         //sort initial results
-                        var threes = new Array();
-                        var chaos = new Array();
+                        var threes = [];
+                        var chaos = [];
                         results.forEach((v,i,a) => {
                             if (v == 3) {
                                 threes.push(v);
@@ -294,7 +305,6 @@ module.exports = {
                                 }
                                 if (threesTotal > 0)
                                     threesTotal--;
-                                chaosTotal++;
                             }
 
                             if (minusTotal != 3) // update minus
@@ -303,6 +313,7 @@ module.exports = {
                             if (!plusTotal != 3) // update plus
                                 plusTotal = threesTotal + d8Threes;
                         }
+                        chaosTotal += initialBurnout;
 
                         //stability check
                         var isStable = (minusTotal > 0 && minusTotal % 3 == 0) || (threesTotal > 0 && threesTotal % 3 == 0) || (plusTotal > 0 && plusTotal % 3 == 0);
