@@ -37,20 +37,20 @@ module.exports = {
         
         while (threesTotal < 6) {
             // roll those <dice / bones>
-            results = new Array();
+            results = [];
             for (dice = 0; dice < 6; dice++) {
             results.push(rando(1,4));
             }
 
             // TEST DATA
-            //results = new Array(3,3,3,1,1,1);
+            //results = [3,3,3,1,1,1];
 
             //increment loop count
             rollsNeeded++;
             
             //sort initial results
-            var threes = new Array();
-            var chaos = new Array();
+            var threes = [];
+            var chaos = [];
             results.forEach((v,i,a) => {
                 if (v == 3) {
                     threes.push(v);
