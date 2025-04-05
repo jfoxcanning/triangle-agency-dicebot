@@ -265,8 +265,8 @@ module.exports = {
                         var d8roll = rando(1,8);
 
                         // TEST DATA
-                        results = [3,1,1,1,1,1];
-                        d8roll = 6;
+                        // results = [3,1,1,1,1,1];
+                        // d8roll = 6;
                         
                         //sort initial results
                         var threes = [];
