@@ -212,7 +212,8 @@ module.exports = {
                                 modalReply.reply({content: `🧿 **ANOMALY UNL3ASHED!** 🧿`, ephemeral: false});
                             });
                         }
-                    });
+                    })
+                    .catch(err => console.log('No modal submit interaction was collected'));
 
                 break;
             case `G3`: // the Sponsorship Die (d8)
@@ -237,7 +238,7 @@ module.exports = {
                 
                 d8Modal.addComponents(new ActionRowBuilder().addComponents(reasoningInput), new ActionRowBuilder().addComponents(burnoutInput));
                 interaction.showModal(d8Modal);
-                interaction.awaitModalSubmit({ time: 60_000 })
+                interaction.awaitModalSubmit({ time: 120_000 })
                     .then(modalResponse => {
                         //get field inputs
                         var reasoning = modalResponse.fields.getTextInputValue(`reasoningInput`);
@@ -471,6 +472,7 @@ module.exports = {
                             });
                         }
                     })
+                    .catch(err => console.log('No modal submit interaction was collected'))
                 break;
             case `N1`: // the Ten-Sided Die
                 var d10Modal = new ModalBuilder()
@@ -496,7 +498,7 @@ module.exports = {
                 d10Modal.addComponents(new ActionRowBuilder().addComponents(burnoutInput), new ActionRowBuilder().addComponents(d6Input));
 
                 interaction.showModal(d10Modal);
-                interaction.awaitModalSubmit({ time: 60_000 })
+                interaction.awaitModalSubmit({ time: 120_000 })
                     .then(modalResponse => {
                         var includeD6 = (modalResponse.fields.getTextInputValue(`d6Input`).toLowerCase() === `y`);
                         var initialBurnout = parseInt(modalResponse.fields.getTextInputValue(`burnoutInput`));
@@ -574,7 +576,8 @@ module.exports = {
                                 modalReply.reply(`🧿 **ANOMALY UNL3ASHED!** 🧿`);
                             });
                         }
-                    });
+                    })
+                    .catch(err => console.log('No modal submit interaction was collected'));
                 break;
             case `T3`: // Skill Checks; the d20
                 // modal time
@@ -590,7 +593,7 @@ module.exports = {
                 d20Modal.addComponents(new ActionRowBuilder().addComponents(qaInput));
 
                 interaction.showModal(d20Modal);
-                interaction.awaitModalSubmit({ time: 60_000 })
+                interaction.awaitModalSubmit({ time: 120_000 })
                     .then(modalResponse => {
                         var qas = parseInt(modalResponse.fields.getTextInputValue(`qaInput`));
                         
