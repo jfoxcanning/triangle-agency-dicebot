@@ -219,7 +219,7 @@ module.exports = {
             case `G3`: // the Sponsorship Die (d8)
                 var d8Modal = new ModalBuilder()
                     .setCustomId(`d8Modal`)
-                    .setTitle(`The Sponsorship Die: the d8`);
+                    .setTitle(`The Sponsorship Die`);
 
                 var reasoningInput = new TextInputBuilder()
                     .setCustomId(`reasoningInput`)
@@ -477,7 +477,7 @@ module.exports = {
             case `N1`: // the Ten-Sided Die
                 var d10Modal = new ModalBuilder()
                     .setCustomId(`d10Modal`)
-                    .setTitle(`The Ten-Sided Die`);
+                    .setTitle(`The 10-Sided Die`);
                 
                 var burnoutInput = new TextInputBuilder()
                     .setCustomId(`burnoutInput`)
@@ -583,7 +583,7 @@ module.exports = {
                 // modal time
                 var d20Modal = new ModalBuilder()
                     .setCustomId(`d20Modal`)
-                    .setTitle(`Skill Check: the d20`);
+                    .setTitle(`Skill: Check!`);
                 
                 var qaInput = new TextInputBuilder()
                     .setCustomId(`qaInput`)
@@ -634,7 +634,7 @@ module.exports = {
                         if (isTriscendent) {
                             modalResponse.fetchReply()
                             .then(modalReply => {
-                                modalReply.reply(`🔺🔺🔺 TRISCENDENCE! 🔺🔺🔺`);
+                                modalReply.reply(`🔺🔺🔺 **TRISCENDENCE!** 🔺🔺🔺`);
                             });
                         }
                     })
