@@ -6,13 +6,7 @@ const { token } = require("./config.json");
 
 // create a new Client and options
 const client = new Client({
-    intents: [GatewayIntentBits.Guilds],
-    activities: [
-        {
-            name: `over our Reality`,
-            type: ActivityType.Watching
-        }
-    ]
+    intents: [GatewayIntentBits.Guilds]
 });
 
 // command handler
@@ -37,7 +31,7 @@ for (const folder of commandFolders) {
 
 // Run this when the client is ready
 client.once(Events.ClientReady, c => {
-    c.user.setActivity(`over our Reality`, {type: "WATCHING"});
+    c.user.setActivity(`over our Reality`, {type: ActivityType.Watching});
     console.log(`Ready!`);
 });
 
