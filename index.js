@@ -37,7 +37,7 @@ for (const folder of commandFolders) {
 
 // Run this when the client is ready
 client.once(Events.ClientReady, c => {
-    client.user.setActivity(`over our Reality`, {type: "WATCHING"});
+    c.user.setActivity(`over our Reality`, {type: "WATCHING"});
     console.log(`Ready!`);
 });
 
