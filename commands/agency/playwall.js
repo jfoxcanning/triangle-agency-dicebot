@@ -4,17 +4,17 @@ const {rando} = require(`@nastyox/rando.js`);
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('playwall')
-        .setDescription(`Tira con un dado top secret sbloccato dal Playwall.`)
+        .setDescription(`Make a nonstandard playwalled dice roll.`)
         .addStringOption(option => 
-            option.setName(`codice`)
-                .setDescription(`Il codice del Documento in Playwall che intendi usare.`)
+            option.setName(`code`)
+                .setDescription(`The playwalled document whose ability you are using.`)
                 .setRequired(true)
                 .setMaxLength(3)
         )
         ,
     async execute(interaction) {
         //read and store input
-        var pd = interaction.options.getString(`codice`).toUpperCase();
+        var pd = interaction.options.getString(`code`).toUpperCase();
 
         switch(pd) {
             // unstable codes
@@ -22,7 +22,7 @@ module.exports = {
             case `N2`: // old 10-sided
             case `X2`: // old d100
                 await interaction.reply({
-                    content: `Questo Documento in Playwall era valido solo nell'Edizione Instabile di Triangle Agency. Controlla la il manuale aggiornato e riprova.`,
+                    content: `This playwall code is only valid in the Unstable Edition of the game. Please check updated materials and try your roll again.`,
                     ephemeral: true
                 });
 
@@ -32,18 +32,18 @@ module.exports = {
             case `U2`: // the Six-Sided Die
                 var d6Modal = new ModalBuilder()
                     .setCustomId(`d6Modal`)
-                    .setTitle(`Il Dado a Sei Facce`);
+                    .setTitle(`The Six-Sided Die`);
                 
                 var reasoningInput = new TextInputBuilder()
                     .setCustomId(`reasoningInput`)
-                    .setLabel(`Quale Abilità Anomala stai usando?`)
+                    .setLabel(`What Anomaly ability are you using?`)
                     .setRequired(false)
                     .setStyle(TextInputStyle.Short)
                     .setMaxLength(45);
                 
                 var burnoutInput = new TextInputBuilder()
                     .setCustomId(`burnoutInput`)
-                    .setLabel(`Di quanto Burnout stai soffrendo?`)
+                    .setLabel(`Amount of Burnout to apply:`)
                     .setRequired(false)
                     .setMaxLength(3)
                     .setValue(`0`)
@@ -155,7 +155,7 @@ module.exports = {
                         compiledResults = compiledResults.concat(`, [**${d6roll}**]`);
                 
                         //finalize results
-                        resultsOutput = `Esito: ${compiledResults}`;
+                        resultsOutput = `Results: ${compiledResults}`;
                 
                         // ----------- COMMENTARY
                         var commentaryTag = isStable ? `🔺` : ``;
@@ -166,10 +166,13 @@ module.exports = {
                 
                         // assemble success commentary
                         if (threesTotal == 0) {
-                            threesText = `Fallimento.`;
+                            threesText = `Failure.`;
                             commentaryTag = `🔵`;
                         } else {
-                            threesText = `Successo: ${threes.length} tre!`;
+                            if (threesTotal > 1)
+                                plural = `es`;
+                
+                            threesText = `${threesTotal} Success${plural}!`;
                         }
                 
                         // assemble failures commentary
@@ -178,15 +181,15 @@ module.exports = {
                             chaosNumberText = `Zero`;
                         }
                 
-                        chaosText = `Generi ${chaosNumberText} Caos.`;
+                        chaosText = `${chaosNumberText} Chaos generated.`;
                 
                         // burnout check
                         var burnoutText = ``;
                         if (hadBurnout) {
-                            var burnoutVerb = `applicato`;
+                            var burnoutVerb = `applied`;
                             //stability check
                             if (isStable) {
-                                burnoutVerb = `neutralizzato`;
+                                burnoutVerb = `cancelled`;
                             }
                 
                             burnoutText = ` Burnout ${burnoutVerb}.`;
@@ -200,34 +203,34 @@ module.exports = {
                         if (isTriscendent) {
                             modalResponse.fetchReply()
                             .then(modalReply => {
-                                modalReply.reply(`🔺🔺🔺**TRISCENDENZA!!!**🔺🔺🔺`);
+                                modalReply.reply(`🔺🔺🔺**TRISCENDENCE!!!**🔺🔺🔺`);
                             });
                         }
                         else if (threesTotal == 7) {
                             modalResponse.fetchReply()
                             .then(modalReply => {
-                                modalReply.reply({content: `🧿 **SCAT3NATI!** 🧿`, ephemeral: false});
+                                modalReply.reply({content: `🧿 **ANOMALY UNL3ASHED!** 🧿`, ephemeral: false});
                             });
                         }
                     })
-                    .catch(err => console.log('Non è stato inserito alcun input modale.'));
+                    .catch(err => console.log('No modal submit interaction was collected'));
 
                 break;
             case `G3`: // the Sponsorship Die (d8)
                 var d8Modal = new ModalBuilder()
                     .setCustomId(`d8Modal`)
-                    .setTitle(`Il Dado Sponsorizzato`);
+                    .setTitle(`The Sponsorship Die`);
 
                 var reasoningInput = new TextInputBuilder()
                     .setCustomId(`reasoningInput`)
-                    .setLabel(`Cosa vuoi Chiedere all'Agenzia?`)
+                    .setLabel(`What are you Asking the Agency to adjust?`)
                     .setRequired(false)
                     .setStyle(TextInputStyle.Short)
                     .setMaxLength(45);
                 
                 var burnoutInput = new TextInputBuilder()
                     .setCustomId(`burnoutInput`)
-                    .setLabel(`Di quanto Burnout stai soffrendo?`)
+                    .setLabel(`Amount of Burnout to apply:`)
                     .setRequired(false)
                     .setMaxLength(3)
                     .setValue(`0`)
@@ -336,7 +339,7 @@ module.exports = {
                         compiledResults = compiledResults.concat(`, /__**${d8roll}**__\\`);
                 
                         //finalize results
-                        resultsOutput = `Esito: ${compiledResults}`;
+                        resultsOutput = `Results: ${compiledResults}`;
                 
                         // ----------- COMMENTARY
                         var commentaryTag = ``;
@@ -352,17 +355,17 @@ module.exports = {
                         var possibleText = ``;
 
                         if (threesTotal == 0 && d8Threes == 0) {
-                            threesText = `Fallimento.`;
+                            threesText = `Failure.`;
                             commentaryTag = `🔵`;
                         } else {
                             if (d8Threes == 0) {
+                                if (threesTotal > 1) plural = `es`;
                                 if (threesTotal > 0 && threesTotal % 3 == 0) commentaryTag = `🔺`;
 
-                                threesText = `Successo: ${threes.length} tre!`;
+                                threesText = `${threesTotal} Success${plural}!`;
                             } else {
-                                possibleText = `POSSIBILE `;
-                                if (minusTotal > 1 || threesTotal > 1 || plusTotal > 1) plural = `i`;
-                                else plural = `o`;
+                                possibleText = `POSSIBLE `;
+                                if (minusTotal > 1 || threesTotal > 1 || plusTotal > 1) plural = `es`;
 
                                 // minus check
                                 if (hadBurnout && !(minusTotal > 0 && minusTotal % 3 == 0)) {
@@ -388,7 +391,7 @@ module.exports = {
                                 } else {
                                     stableTag = `🔵 `;
                                 }
-                                threesText = threesText.concat(`${stableTag}${threesTotal}, o `);
+                                threesText = threesText.concat(`${stableTag}${threesTotal}, or `);
 
                                 // plus check
                                 if (hadBurnout && !(plusTotal > 0 && plusTotal % 3 == 0)) {
@@ -411,21 +414,21 @@ module.exports = {
                         // assemble failures commentary
                         var chaosNumberText = `${chaosTotal}`;
                         if (isStable && chaosTotal != 0) {
-                            chaosNumberText = chaosNumberText.concat(` (o 0)`);
+                            chaosNumberText = chaosNumberText.concat(` (or 0)`);
                         }
                         if (d8Threes == 0 && isStable)
                             chaosNumberText = `0`;
                 
-                        chaosText = `Generi ${chaosNumberText} Caos.`;
+                        chaosText = `${chaosNumberText} Chaos generated.`;
                 
                         // burnout check
                         var burnoutText = ``;
                         if (hadBurnout) {
-                            var maybeText = (d8Threes > 0 && timesBurnoutApplied != maxBurnout) ? `se il Successo è Stabile ` : ``;
-                            var burnoutVerb = `applicato`;
+                            var maybeText = (d8Threes > 0 && timesBurnoutApplied != maxBurnout) ? `can be ` : ``;
+                            var burnoutVerb = `applied`;
                             //stability check
                             if (isStable) {
-                                burnoutVerb = `neutralizzato`;
+                                burnoutVerb = `cancelled`;
                             }
                 
                             burnoutText = ` Burnout ${maybeText}${burnoutVerb}.`;
@@ -438,22 +441,22 @@ module.exports = {
                         if (minusTotal > 0 || threesTotal > 0 || plusTotal > 0) {
                             switch(d8roll) {
                                 case 1:
-                                    sponsorText = `\n> *Per evitare il Fallimento devi inserire nella Catena Causale un evento che ha coinvolto il bersaglio del tiro o il luogo dove ti trovi **esattamente 40 ore fa**.*`;
+                                    sponsorText = `\n> *You must reference **something that happened exactly 40 hours ago** to your target or location that affects this Causality Chain, or this roll fails.*`;
                                     break;
                                 case 2:
-                                    sponsorText = `\n> *Per evitare il Fallimento devi inserire nella Catena Causale **un evento avvenuto all'estero**.*`;
+                                    sponsorText = `\n> *You must reference **something that happened in another country** that affects this Causality Chain, or this roll fails.*`;
                                     break;
                                 case 4:
-                                    sponsorText = `\n> *Per evitare il Fallimento devi inserire nella Catena Causale **l'influenza di un'opera di fantasia a tua scelta**.*`;
+                                    sponsorText = `\n> *You must reference how **exposure to a piece of fiction** affects this Causality Chain, or this roll fails.*`;
                                     break;
                                 case 5:
-                                    sponsorText = `\n> *Per evitare il Fallimento devi inserire nella Catena Causale **le Gomme da Masticare Dietetiche Boccasciutta**. Assicurati di usare il nome completo del prodotto!*`;
+                                    sponsorText = `\n> *You must reference how **Wet Mouth Brand Chewing Gum & Dietary Supplement** affects this Causality Chain, or this roll fails.*`;
                                     break;
                                 case 7:
-                                    sponsorText = `\n> *Per evitare il Fallimento devi inserire nella Catena Causale **qualcosa di colore blu**.*`;
+                                    sponsorText = `\n> *You must include **something blue** in this Causality Chain, or this roll fails.*`;
                                     break;
                                 case 8:
-                                    sponsorText = `\n> *Per evitare il Fallimento devi inserire nella Catena Causale **un tradimento**.*`;
+                                    sponsorText = `\n> *You must reference **a betrayal** that affects this Causality Chain, or this roll fails.*`;
                                     break;
                             }
                         }
@@ -465,20 +468,20 @@ module.exports = {
                         if (isTriscendent) {
                             modalResponse.fetchReply()
                             .then(modalReply => {
-                                modalReply.reply(`🔺🔺🔺**${possibleText}TRISCENDENZA!!!**🔺🔺🔺`);
+                                modalReply.reply(`🔺🔺🔺**${possibleText}TRISCENDENCE!!!**🔺🔺🔺`);
                             });
                         }
                     })
-                    .catch(err => console.log('Non è stato inserito alcun input modale.'))
+                    .catch(err => console.log('No modal submit interaction was collected'))
                 break;
             case `N1`: // the Ten-Sided Die
                 var d10Modal = new ModalBuilder()
                     .setCustomId(`d10Modal`)
-                    .setTitle(`Il Dado a Dieci Facce`);
+                    .setTitle(`The 10-Sided Die`);
                 
                 var burnoutInput = new TextInputBuilder()
                     .setCustomId(`burnoutInput`)
-                    .setLabel(`Di quanto Burnout stai soffrendo?`)
+                    .setLabel(`Amount of Burnout to apply:`)
                     .setStyle(TextInputStyle.Short)
                     .setMaxLength(3)
                     .setPlaceholder(`0`)
@@ -486,7 +489,7 @@ module.exports = {
                 
                 var d6Input = new TextInputBuilder()
                     .setCustomId(`d6Input`)
-                    .setLabel(`Tiri anche il d6? (s/n)`)
+                    .setLabel(`Include the d6? (y/n)`)
                     .setMaxLength(1)
                     .setStyle(TextInputStyle.Short)
                     .setValue(`n`)
@@ -510,7 +513,7 @@ module.exports = {
                         //d10roll = 3;
                         //d6roll = 3;
 
-                        var resultsOutput = `Esito: < **${d10roll}** >`;
+                        var resultsOutput = `Results: < **${d10roll}** >`;
 
                         if (includeD6)
                             resultsOutput = resultsOutput.concat(`, [**${d6roll}**]`);
@@ -549,13 +552,13 @@ module.exports = {
                         // ---------- d10 COMMENTARY
                         var commentaryOutput = ``;
 
-                        var burnoutText = hadBurnout ? ` Burnout applicato.` : ``;
+                        var burnoutText = hadBurnout ? ` Burnout applied.` : ``;
 
                         if (d10roll == 3) {
-                            commentaryOutput = `🔺 Fallimento. Generi ${failureTotal} Caos.${burnoutText} 🔺`;
+                            commentaryOutput = `🔺 Failure. ${failureTotal} Chaos Generated.${burnoutText} 🔺`;
                         } else {
                             var plural = (successTotal == 1) ? `` : `es`;
-                            commentaryOutput = `Successo: ${successTotal} tre! Generi ${failureTotal} Caos.${burnoutText}`;
+                            commentaryOutput = `${successTotal} Success${plural}! ${failureTotal} Chaos generated.${burnoutText}`;
                         }
                 
                         // ---------- SEND OUTPUT
@@ -564,27 +567,27 @@ module.exports = {
                         if (isTriscendent) {
                             modalResponse.fetchReply()
                             .then(modalReply => {
-                                modalReply.reply(`🔺🔺🔺**TRISCENDENZA!!!**🔺🔺🔺`);
+                                modalReply.reply(`🔺🔺🔺**TRISCENDENCE!!!**🔺🔺🔺`);
                             });
                         }
                         else if (successTotal == 7) {
                             modalResponse.fetchReply()
                             .then(modalReply => {
-                                modalReply.reply(`🧿 **SCAT3NATI!** 🧿`);
+                                modalReply.reply(`🧿 **ANOMALY UNL3ASHED!** 🧿`);
                             });
                         }
                     })
-                    .catch(err => console.log('Non è stato inserito alcun input modale.'));
+                    .catch(err => console.log('No modal submit interaction was collected'));
                 break;
             case `T3`: // Skill Checks; the d20
                 // modal time
                 var d20Modal = new ModalBuilder()
                     .setCustomId(`d20Modal`)
-                    .setTitle(`Prova di Abilità`);
+                    .setTitle(`Skill: Check!`);
                 
                 var qaInput = new TextInputBuilder()
                     .setCustomId(`qaInput`)
-                    .setLabel(`Quanti CQ hai nella Qualità scelta?`)
+                    .setLabel(`How many QAs do you have in this Quality?`)
                     .setStyle(TextInputStyle.Short);
                 
                 d20Modal.addComponents(new ActionRowBuilder().addComponents(qaInput));
@@ -604,26 +607,26 @@ module.exports = {
 
                         var d20Total = d20Roll + qas;
 
-                        var resultsOutput = `Esito: <${d20Roll}> + ${qas}`;
+                        var resultsOutput = `Results: <${d20Roll}> + ${qas}`;
 
                         // ---------- d20 COMMENTARY
                         var commentaryOutput = ``;
-                        var successText= `Successo! La tua storia personale è stata sovrascritta.`;
-                        var failureText = `\nPerdi tutti i CQ in questa Qualità. Scegli un pezzo della tua storia personale: non è mai avvenuto.`;
+                        var successText= `Success! Your backstory has been adjusted.`;
+                        var failureText = `\nYou lose all QAs in this quality, and one part of your backstory never happened.`;
                         var isTriscendent = false;
 
                         if (d20Roll == 3) {
-                            commentaryOutput = `🔺 Successo automatico! La tua storia personale è stata sovrascritta. 🔺`;
+                            commentaryOutput = `🔺 Automatic ${successText} 🔺`;
                             isTriscendent = true;
                         }
                         else if (d20Roll == 7) {
-                            commentaryOutput = `🔵 Fallimento automatico. Generi ${d20roll} Caos. 🔵${failureText}`;
+                            commentaryOutput = `🔵 Automatic failure. ${d20roll} Chaos generated. 🔵${failureText}`;
                         }
                         else if (d20Total > 10) {
                             commentaryOutput = `${successText}`;
                         }
                         else { // d20Total in failure range
-                            commentaryOutput = `Fallimento. Generi ${d20roll} Caos.${failureText}`;
+                            commentaryOutput = `Failure. ${d20roll} Chaos generated.${failureText}`;
                         }
                         
                         // ---------- d20 OUTPUT
@@ -631,7 +634,7 @@ module.exports = {
                         if (isTriscendent) {
                             modalResponse.fetchReply()
                             .then(modalReply => {
-                                modalReply.reply(`🔺🔺🔺 **TRISCENDENZA!** 🔺🔺🔺`);
+                                modalReply.reply(`🔺🔺🔺 **TRISCENDENCE!** 🔺🔺🔺`);
                             });
                         }
                     })
@@ -646,13 +649,13 @@ module.exports = {
                 //extras = 33;
 
                 await interaction.reply({
-                    content: `Hai **${extras} Comparse** a disposizione.\n*Tieni traccia in autonomia delle Comparse rimaste!*\n> **Se Veenilla (lo sviluppatore di AgencyOS) o gli Agenti di NessunDove sono nella partita,** questo tiro non è valido. Ringraziali e usa un altro bot per chiamare le Comparse.`,
+                    content: `You have **${extras} Extras** available this mission.\n*Keep track of this number yourself!*\n> **If Veenilla (the bot developer) is playing in your game right now,** this roll is not legal. Please say hello, then borrow someone else's dice or dice bot to roll for Extras.`,
                     ephemeral: true
                 });
 
                 break;
             default:
-                await interaction.reply(`Documento in Playwall non valido. Verifica il codice corretto. Per sporgere reclamo sei pregato di recarti al Caveau della tua Filiale in prima persona.`);
+                await interaction.reply(`Invalid Playwall. Please verify your request and report any complaints to Vault staff in-person.`);
                 break;
         }
     }

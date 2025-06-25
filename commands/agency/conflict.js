@@ -3,18 +3,18 @@ const { SlashCommandBuilder } = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('conflitto')
-        .setDescription('Dai inizio alla Risoluzione dei Conflitti Interni.')
+        .setName('conflict')
+        .setDescription('Engage in Conflict Resolution.')
         .addStringOption(option => 
-            option.setName(`obiettivo`)
-                .setDescription(`Dichiara il tuo obiettivo.`)
+            option.setName(`reason`)
+                .setDescription(`State your goal.`)
                 .setMaxLength(32)
                 .setRequired(true)
         )
         ,
     async execute(interaction) {
         //pull options and define variables
-        var reasoning = interaction.options.getString(`obiettivo`);
+        var reasoning = interaction.options.getString(`reason`);
 
         var reasonOutput = ``;
         var resultsOutput = ``;
@@ -23,7 +23,7 @@ module.exports = {
         // ---------- REASONING
         if (reasoning) {
             var reasonTag = `\`\`\``;
-            reasonOutput = `**Inizio Risoluzione del Conflitto.** Obiettivo:${reasonTag}${reasoning}${reasonTag}`;
+            reasonOutput = `**Engaging in Conflict Resolution.** Your Goal:${reasonTag}${reasoning}${reasonTag}`;
         }
 
         // ---------- RESULTS
@@ -79,14 +79,14 @@ module.exports = {
         }
 
         //finalize results
-        resultsOutput = `Esito:\n${compiledResults}`;
+        resultsOutput = `Results:\n${compiledResults}`;
 
         // ----------- COMMENTARY
         var commentaryOutput = ``;
 
         //assemble commentary
-        commentaryOutput = `Hai ottenuto **${threesTotal} Successi** in **${rollsNeeded} tiri**.`;
-        commentaryOutput = commentaryOutput.concat(`\n-# Ha la meglio chi arriva a sei 3 con meno tiri. A parità di tiri, ha la meglio chi ha ottenuto più 3.`);
+        commentaryOutput = `You achieved **${threesTotal} Successes** in **${rollsNeeded} rolls**.`;
+        commentaryOutput = commentaryOutput.concat(`\n-# Your goal becomes reality if you got six 3s faster than everyone else, or if you got more threes than everyone else in the same number of rolls.`);
 
         //send reply
         await interaction.reply(`${reasonOutput}${resultsOutput}\n${commentaryOutput.trim()}`);

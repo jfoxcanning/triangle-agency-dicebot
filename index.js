@@ -11,7 +11,7 @@ const client = new Client({
 
 // command handler
 client.commands = new Collection();
-const foldersPath = path.join(__dirname, `commands`);
+const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);
 
 for (const folder of commandFolders) {
@@ -24,15 +24,15 @@ for (const folder of commandFolders) {
         if ('data' in command && 'execute' in command) {
             client.commands.set(command.data.name, command);
         } else {
-            console.log(`[ATTENZIONE] Proprietà 'data' o 'execute' mancante nel comando in posizione ${filepath} !`);
+            console.log(`[WARNING] The command at ${filepath} is missing a required 'data' or 'execute' property!`);
         }
     }
 }
 
 // Run this when the client is ready
 client.once(Events.ClientReady, c => {
-    c.user.setActivity(`ogni vostra azione`, {type: ActivityType.Watching});
-    console.log(`Operativo!`);
+    c.user.setActivity(`over our Reality`, {type: ActivityType.Watching});
+    console.log(`Ready!`);
 });
 
 //setup some interaction logging
@@ -42,7 +42,7 @@ client.on(Events.InteractionCreate, async interaction => {
     const command = client.commands.get(interaction.commandName);
 
     if (!command) {
-        console.error(`Impossibile trovare il comando ${interaction.commandName} .`);
+        console.error(`No command matching ${interaction.commandName} was found.`);
         return;
     }
 
@@ -51,15 +51,15 @@ client.on(Events.InteractionCreate, async interaction => {
     } catch (error) {
         console.error(error);
         if (interaction.replied || interaction.deferred) {
-            await interaction.followUp({ content: `Errore nell'esecuzione del comando!`, ephemeral: true });
+            await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
         } else {
-            await interaction.reply({ content: `Errore nell'esecuzione del comando!`, ephemeral: true});
+            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true});
         }
     }
 });
 
 client.on('error', error => {
-    console.error(`Errore di WebSocket:`, error);
+    console.error(`The WebSocket encountered an error:`, error);
 });
 
 // Log in

@@ -3,23 +3,23 @@ const { SlashCommandBuilder } = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('Tira')
-        .setDescription('Tira 6d4 per Alterare la Realtà.')
+        .setName('roll')
+        .setDescription('Alter reality by rolling 6d4.')
         .addStringOption(option => 
-            option.setName(`obiettivo`)
-                .setDescription(`Perché vuoi tirare i dadi?`)
+            option.setName(`reason`)
+                .setDescription(`What are you rolling for?`)
                 .setMaxLength(32)
                 .setRequired(false)
         )
         .addIntegerOption(option => 
             option.setName(`burnout`)
-                .setDescription(`Di quanto Burnout stai soffrendo?`)
+                .setDescription(`How much Burnout are you suffering from?`)
                 .setMinValue(0)    
         )
         ,
     async execute(interaction) {
         //pull options and define variables
-        var reasoning = interaction.options.getString(`obiettivo`);
+        var reasoning = interaction.options.getString(`reason`);
         var burnout = interaction.options.getInteger(`burnout`) ?? 0;
         var hadBurnout = (burnout > 0);
 
@@ -100,7 +100,7 @@ module.exports = {
         }
 
         //finalize results
-        resultsOutput = `Esito: ${compiledResults}`;
+        resultsOutput = `Results: ${compiledResults}`;
 
         // ----------- COMMENTARY
         var commentaryTag = isStable ? `🔺` : ``;
@@ -111,10 +111,13 @@ module.exports = {
 
         // assemble success commentary
         if (threes.length == 0) {
-            threesText = `Fallimento.`;
+            threesText = `Failure.`;
             commentaryTag = `🔵`;
         } else {
-            threesText = `Successo: ${threes.length} tre!`;
+            if (threes.length > 1)
+                plural = `es`;
+
+            threesText = `${threes.length} Success${plural}!`;
         }
 
         // assemble failures commentary
@@ -124,12 +127,12 @@ module.exports = {
             chaosNumberText = `0`;
         }
 
-        chaosText = `Generi ${chaosNumberText} Caos.`;
+        chaosText = `${chaosNumberText} Chaos generated.`;
 
         // burnout check
         var burnoutText = ``;
         if (hadBurnout) {
-            var burnoutVerb = startStable ? `neutralizzato` : `applicato`;
+            var burnoutVerb = startStable ? `cancelled` : `applied`;
 
             burnoutText = ` Burnout ${burnoutVerb}.`;
         }
@@ -140,7 +143,7 @@ module.exports = {
         await interaction.reply(`${reasonOutput}${resultsOutput}\n${commentaryOutput.trim()}`);
         //triscendence followup
         if (isTriscendent) {
-            await interaction.followUp({ content: `🔺🔺🔺**TRISCENDENZA!!!**🔺🔺🔺`, ephemeral: false});
+            await interaction.followUp({ content: `🔺🔺🔺**TRISCENDENCE!!!**🔺🔺🔺`, ephemeral: false});
         }
     }
 };
