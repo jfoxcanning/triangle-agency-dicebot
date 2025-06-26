@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, ActionRow } = require("discord.js");
+const { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, ActionRow, MessageFlags } = require("discord.js");
 const {rando} = require(`@nastyox/rando.js`);
 
 module.exports = {
@@ -23,7 +23,7 @@ module.exports = {
             case `X2`: // old d100
                 await interaction.reply({
                     content: `This playwall code is only valid in the Unstable Edition of the game. Please check updated materials and try your roll again.`,
-                    ephemeral: true
+                    flags: MessageFlags.Ephemeral
                 });
 
                 break;
@@ -209,7 +209,7 @@ module.exports = {
                         else if (threesTotal == 7) {
                             modalResponse.fetchReply()
                             .then(modalReply => {
-                                modalReply.reply({content: `🧿 **ANOMALY UNL3ASHED!** 🧿`, ephemeral: false});
+                                modalReply.reply(`🧿 **ANOMALY UNL3ASHED!** 🧿`);
                             });
                         }
                     })
@@ -650,7 +650,7 @@ module.exports = {
 
                 await interaction.reply({
                     content: `You have **${extras} Extras** available this mission.\n*Keep track of this number yourself!*\n> **If Veenilla (the bot developer) is playing in your game right now,** this roll is not legal. Please say hello, then borrow someone else's dice or dice bot to roll for Extras.`,
-                    ephemeral: true
+                    flags: MessageFlags.Ephemeral
                 });
 
                 break;

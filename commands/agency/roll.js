@@ -143,7 +143,7 @@ module.exports = {
         await interaction.reply(`${reasonOutput}${resultsOutput}\n${commentaryOutput.trim()}`);
         //triscendence followup
         if (isTriscendent) {
-            await interaction.followUp({ content: `🔺🔺🔺**TRISCENDENCE!!!**🔺🔺🔺`, ephemeral: false});
+            await interaction.followUp(`🔺🔺🔺**TRISCENDENCE!!!**🔺🔺🔺`);
         }
     }
 };
