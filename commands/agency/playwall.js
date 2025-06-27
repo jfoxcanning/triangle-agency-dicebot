@@ -108,7 +108,6 @@ module.exports = {
                                 break;
                         }
 
-                        var startStable = (threesTotal > 0 && threesTotal % 3 == 0);
                         var isTriscendent = (threesTotal == 3);
                         
                         if (!isTriscendent) { //if triscendent, do not adjust rolls
@@ -307,18 +306,9 @@ module.exports = {
                                 if (threesTotal > 0)
                                     threesTotal--;
                             }
-
-                            if (minusTotal != 3) // update minus
-                                minusTotal = threesTotal - d8Threes;
-                            
-                            if (!plusTotal != 3) // update plus
-                                plusTotal = threesTotal + d8Threes;
                         }
                         chaosTotal += initialBurnout;
 
-                        //stability check
-                        var isStable = (minusTotal > 0 && minusTotal % 3 == 0) || (threesTotal > 0 && threesTotal % 3 == 0) || (plusTotal > 0 && plusTotal % 3 == 0);
-                
                         // ----------- RESULTS ASSEMBLY
                         var compiledResults = ``;
                         var threesTag = `**`;
@@ -410,6 +400,9 @@ module.exports = {
                                 threesText = threesText.concat(` Success${plural}!`);
                             }
                         }
+                
+                        //stability check
+                        var isStable = (minusTotal > 0 && minusTotal % 3 == 0) || (threesTotal > 0 && threesTotal % 3 == 0) || (plusTotal > 0 && plusTotal % 3 == 0);
                 
                         // assemble failures commentary
                         var chaosNumberText = `${chaosTotal}`;
@@ -535,14 +528,15 @@ module.exports = {
                             }
                         }
 
-                        var isTriscendent = (successTotal == 3);
-
                         // apply burnout
                         var hadBurnout = initialBurnout > 0;
-                        for (b = initialBurnout; b > 0; b--) {
-                            if (successTotal > 0)
-                                successTotal--;
-                            failureTotal++;
+                        var unleashed = (successTotal == 7);
+                        if (! unleashed) {
+                            for (b = initialBurnout; b > 0; b--) {
+                                if (successTotal > 0)
+                                    successTotal--;
+                                failureTotal++;
+                            }
                         }
 
                         if (d10roll == 3) {
@@ -552,7 +546,13 @@ module.exports = {
                         // ---------- d10 COMMENTARY
                         var commentaryOutput = ``;
 
-                        var burnoutText = hadBurnout ? ` Burnout applied.` : ``;
+                        var burnoutText = ``;
+                        if (hadBurnout) {
+                            if (unleashed)
+                                burnoutText = ` Burnout cancelled.`;
+                            else
+                                burnoutText = ` Burnout applied.`;
+                        }
 
                         if (d10roll == 3) {
                             commentaryOutput = `🔺 Failure. ${failureTotal} Chaos Generated.${burnoutText} 🔺`;
@@ -563,14 +563,8 @@ module.exports = {
                 
                         // ---------- SEND OUTPUT
                         modalResponse.reply(`${resultsOutput}\n${commentaryOutput}`);
-                        // triscendence and unleash check
-                        if (isTriscendent) {
-                            modalResponse.fetchReply()
-                            .then(modalReply => {
-                                modalReply.reply(`🔺🔺🔺**TRISCENDENCE!!!**🔺🔺🔺`);
-                            });
-                        }
-                        else if (successTotal == 7) {
+                        // unleash check
+                        if (unleashed) {
                             modalResponse.fetchReply()
                             .then(modalReply => {
                                 modalReply.reply(`🧿 **ANOMALY UNL3ASHED!** 🧿`);
@@ -612,7 +606,7 @@ module.exports = {
                         // ---------- d20 COMMENTARY
                         var commentaryOutput = ``;
                         var successText= `Success! Your backstory has been adjusted.`;
-                        var failureText = `\nYou lose all QAs in this quality, and one part of your backstory never happened.`;
+                        var failureText = `One part of your backstory never happened.`;
                         var isTriscendent = false;
 
                         if (d20Roll == 3) {
@@ -620,13 +614,13 @@ module.exports = {
                             isTriscendent = true;
                         }
                         else if (d20Roll == 7) {
-                            commentaryOutput = `🔵 Automatic failure. ${d20roll} Chaos generated. 🔵${failureText}`;
+                            commentaryOutput = `🔵 Automatic failure. ${d20roll} Chaos generated. 🔵\nYou lose all QAs in this quality. ${failureText}`;
                         }
                         else if (d20Total > 10) {
                             commentaryOutput = `${successText}`;
                         }
                         else { // d20Total in failure range
-                            commentaryOutput = `Failure. ${d20roll} Chaos generated.${failureText}`;
+                            commentaryOutput = `Failure. ${d20roll} Chaos generated.\n${failureText}`;
                         }
                         
                         // ---------- d20 OUTPUT
