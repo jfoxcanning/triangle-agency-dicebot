@@ -43,7 +43,7 @@ module.exports = {
                 
                 var burnoutInput = new TextInputBuilder()
                     .setCustomId(`burnoutInput`)
-                    .setLabel(`Amount of Burnout to apply:`)
+                    .setLabel(`How much Burnout are you suffering from?`)
                     .setRequired(false)
                     .setMaxLength(3)
                     .setValue(`0`)
@@ -229,7 +229,7 @@ module.exports = {
                 
                 var burnoutInput = new TextInputBuilder()
                     .setCustomId(`burnoutInput`)
-                    .setLabel(`Amount of Burnout to apply:`)
+                    .setLabel(`How much Burnout are you suffering from?`)
                     .setRequired(false)
                     .setMaxLength(3)
                     .setValue(`0`)
@@ -474,7 +474,7 @@ module.exports = {
                 
                 var burnoutInput = new TextInputBuilder()
                     .setCustomId(`burnoutInput`)
-                    .setLabel(`Amount of Burnout to apply:`)
+                    .setLabel(`How much Burnout are you suffering from?`)
                     .setStyle(TextInputStyle.Short)
                     .setMaxLength(3)
                     .setPlaceholder(`0`)
